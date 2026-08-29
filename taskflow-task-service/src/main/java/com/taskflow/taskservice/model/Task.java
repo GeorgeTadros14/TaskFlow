@@ -18,6 +18,7 @@ public class Task {
     private LocalDate dueDate;
     private Instant createdAt;
     private Instant updatedAt;
+    private String assignedTo;
 
     public Task() {
     }
@@ -87,5 +88,13 @@ public class Task {
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
+    }
+    public String getAssignedTo()
+    {
+        return assignedTo;   
+    }
+    public void setAssignedTo(String assignedTo)
+    {
+        this.assignedTo = assignedTo;
     }
 }

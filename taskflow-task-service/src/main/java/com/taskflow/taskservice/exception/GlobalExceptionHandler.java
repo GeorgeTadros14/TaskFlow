@@ -41,4 +41,9 @@ public class GlobalExceptionHandler {
         body.put("message", message);
         return body;
     }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String,Object>> handleBadRequest(IllegalArgumentException ex)
+    {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(buildBody(HttpStatus.BAD_REQUEST,ex.getMessage())); 
+    }
 }

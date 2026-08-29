@@ -52,4 +52,9 @@ public class TaskController {
         taskService.deleteTask(id);
         return ResponseEntity.noContent().build();
     }
+    @PatchMapping("/{id}/assign/{username}")
+    public ResponseEntity<Task> assignTask(@PathVariable String id, @PathVariable String username)
+    {
+        return ResponseEntity.ok(taskService.assignUser(id,username));
+    }
 }

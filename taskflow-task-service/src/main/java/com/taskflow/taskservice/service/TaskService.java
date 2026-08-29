@@ -1,5 +1,6 @@
 package com.taskflow.taskservice.service;
 
+import com.taskflow.taskservice.client.UserServiceClient;
 import com.taskflow.taskservice.dto.TaskRequest;
 import com.taskflow.taskservice.exception.TaskNotFoundException;
 import com.taskflow.taskservice.model.Task;
@@ -14,9 +15,11 @@ import java.util.List;
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final UserServiceClient userServiceClient;
 
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, UserServiceClient userServiceClient) {
         this.taskRepository = taskRepository;
+        this.userServiceClient = userServiceClient; 
     }
 
     public Task createTask(TaskRequest request) {
@@ -50,5 +53,23 @@ public class TaskService {
     public void deleteTask(String id) { 
         Task existing = getTaskById(id);
         taskRepository.delete(existing);
+    }
+
+    public Task assignUser(String id,String username)
+    {
+        Task task = getTaskById(id);
+        
+        boolean exists=userServiceClient.userExists(username);
+        if(!exists){
+            throw new IllegalArgumentException(
+                "Cannot assign: user '"+ username +"' doesn't exist, or User Service is unavailable");
+        }
+        
+        task.setAssignedTo(username);
+        task.setUpdatedAt(Instant.now());
+        return taskRepository.save(task);
+
+            
+        
     }
 }

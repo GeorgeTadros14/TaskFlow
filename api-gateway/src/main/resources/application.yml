@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        # Anything under /api/auth or /api/users goes to User Service.
+        # "lb://USER-SERVICE" means "ask Eureka where USER-SERVICE is right now"
+        # instead of a hardcoded host:port.
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/auth/**,/api/users/**
+
+        # Anything under /api/tasks goes to Task Service.
+        - id: task-service
+          uri: lb://TASK-SERVICE
+          predicates:
+            - Path=/api/tasks/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
